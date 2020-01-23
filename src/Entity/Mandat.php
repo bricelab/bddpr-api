@@ -54,14 +54,14 @@ class Mandat
     private $juridictions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TypeMandat")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TypeMandat", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups("search:read")
      */
     private $typeMandat;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Fugitif", inversedBy="mandats")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Fugitif", inversedBy="mandats", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $fugitif;

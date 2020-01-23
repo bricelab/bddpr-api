@@ -24,14 +24,14 @@ class NationaliteFugitif
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Nationalite", inversedBy="natFugitifs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Nationalite", inversedBy="natFugitifs", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups("search:read")
      */
     private $nationalite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Fugitif", inversedBy="listeNationalites")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Fugitif", inversedBy="listeNationalites", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
      */
@@ -41,7 +41,7 @@ class NationaliteFugitif
      * @ORM\Column(type="boolean")
      * @Groups("search:read")
      */
-    private $principale;
+    private $principale = true;
 
     public function getId(): ?int
     {

@@ -189,7 +189,7 @@ class Fugitif
     /**
      * @var Collection|NationaliteFugitif[]
      * 
-     * @ORM\OneToMany(targetEntity="App\Entity\NationaliteFugitif", mappedBy="fugitif", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\NationaliteFugitif", mappedBy="fugitif", orphanRemoval=true, cascade={"persist"})
      * @Groups("search:read")
      */
     private $listeNationalites;
