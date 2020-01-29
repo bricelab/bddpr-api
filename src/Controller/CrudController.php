@@ -8,6 +8,7 @@ use App\Entity\Nationalite;
 use App\Entity\NationaliteFugitif;
 use App\Entity\TypeMandat;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,16 +27,97 @@ class CrudController extends AbstractController
     // }
 
     /**
-     * @Route("/data", name = "api_add_path")
+     * @Route("/update", name = "data_update_path", methods="POST")
      */
 
-    public function add(Request $request) : Response
+    public function update(Request $request, EntityManagerInterface $em) : Response
+    {
+        
+    }
+
+    /**
+     * @Route("/{entity}", name = "entity_path", methods="GET")
+     */
+    public function findClassObjects(Request $request, $entity){
+
+        $entity = "App\\Entity\\".$entity;
+
+        if (!class_exists($entity)){
+            $message = "Erreur : Cette classe n'existe pas !";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $data = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository($entity)
+                            ->findAll();
+                            
+        return $this->json($data, Response::HTTP_OK, []);
+    }
+
+    /**
+     * @Route("/delete", name = "data_deletion_path", methods="POST")
+     */
+
+    public function delete(Request $request, EntityManagerInterface $em) : Response
+    {
+        $params = json_decode($request->getContent(), true);
+
+        if ($params == null){
+            $message = "Bad request";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $className = $params["class"];
+        $property = $params["property"];
+        $value = $params["value"];
+
+        $className = "App\\Entity\\".$className;
+        if (!class_exists($className)){
+            $message = "Erreur : Cette classe n'existe pas !";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!property_exists($className, $property)){
+            $message = "Erreur : Cette proprieté n'existe pas dans cette classe !";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+    
+        $item = $em->getRepository($className)->findOneBy([$property => $value]);
+
+        if ($item == NULL){
+            $message = "Erreur : Cet objet ".($property)." : ".($value)." n'existe pas !";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            //code...
+            $em->remove($item);
+            $em->flush();
+
+            return $this->json("Item deleted successfully", Response::HTTP_OK, []);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->json("An error occured while deleting the item with ".$property." as ".$value, Response::HTTP_BAD_REQUEST);
+        }                
+
+    }
+
+    /**
+     * @Route("/add", name = "data_addition_path", methods="POST")
+     */
+
+    public function add(Request $request, EntityManagerInterface $em) : Response
     {
 
-        $em = $this->getDoctrine()
-                   ->getManager();
+        //$em = $this->getDoctrine()
+        //           ->getManager();
 
-        $mandat = $this->getMandat($request, $em);
+        $reqContent = json_decode($request->getContent(), true);
+
+        dd($reqContent);
+        $mandat = $this->getMandat($reqContent, $em);
 
         $jsonResponse = null;
 
@@ -59,21 +141,23 @@ class CrudController extends AbstractController
         return $jsonResponse;
     }
 
-    private function getMandat(Request $request, EntityManager $em){
+    private function getMandat(Array $reqContent, EntityManager $em){
 
         // initializing the mandat object
         $mandat = new Mandat();
         
         // retreiving the mandat properties' value from the request
-        $reference = $request->get("reference");
-        $infractions = $request->get("infractions");
-        $juridictions = $request->get("juridictions");
-        $execute = $request->get("execute");
-        $chambres = $request->get("chambres");
-        $dateEmission = $request->get("dateemission");
+        $reference = $reqContent["reference"];
+        $infractions = $reqContent["infractions"];
+        $juridictions = $reqContent["juridictions"];
+        $execute = $reqContent["execute"];
+        $chambres = $reqContent["chambres"];
+        $dateEmission = $reqContent["dateemission"];
 
-        $typeMandat = $this->getTypeMandat($request, $em);
-        $fugitif = $this->getFugitif($request, $em);
+        // var_dump($request);
+
+        $typeMandat = $this->getTypeMandat($reqContent, $em);
+        $fugitif = $this->getFugitif($reqContent, $em);
 
         $mandat->setReference($reference);
         $mandat->setInfractions($infractions);
@@ -89,9 +173,9 @@ class CrudController extends AbstractController
 
     }
 
-    private function getTypeMandat(Request $request, EntityManager $em){
+    private function getTypeMandat(Array $reqContent, EntityManager $em){
 
-        $libelle = $request->get("typemandat");
+        $libelle = $reqContent["typemandat"];
 
         $typeMandat = $em->getRepository(TypeMandat::class)
                             ->findOneBy(["libelle" => $libelle]);
@@ -103,9 +187,9 @@ class CrudController extends AbstractController
         return $typeMandat;
     }
 
-    private function getNationalite(Request $request, EntityManager $em){
+    private function getNationalite(Array $reqContent, EntityManager $em){
         
-        $libelle = $request->get("nationalite");
+        $libelle = $reqContent["nationalite"];
 
         $nationalite = $em->getRepository(Nationalite::class)
                             ->findOneBy(["libelle" => $libelle]);
@@ -118,25 +202,25 @@ class CrudController extends AbstractController
 
     }
 
-    private function getFugitif(Request $request, EntityManager $em){
+    private function getFugitif(Array $reqContent, EntityManager $em){
 
         // retreiving fugitif object's properties values
-        $nom = $request->get("nom");
-        $prenoms = $request->get("prenoms");
-        $nomMarital = $request->get("nommarital");
-        $alias = $request->get("alias");
-        $surnom = $request->get("surnom");
-        $adresse = $request->get("taille");
-        $poids = $request->get("poids");
-        $sexe = $request->get("sexe");
-        $observations = $request->get("observations");
-        $numeroTelephone = $request->get("numerotelephone");
-        $numeroPieceID = $request->get("numeropieceid");
-        $couleurPeau = $request->get("couleurpeau");
-        $couleurYeux = $request->get("couleuryeux");
-        $couleurCheveux = $request->get("couleurcheveux");
-        $dateNaissance = $request->get("datenaissance");
-        $lieuNaissance = $request->get("lieunaissance");
+        $nom = $reqContent["nom"];
+        $prenoms = $reqContent["prenoms"];
+        $nomMarital = $reqContent["nommarital"];
+        $alias = $reqContent["alias"];
+        $surnom = $reqContent["surnom"];
+        $adresse = $reqContent["taille"];
+        $poids = $reqContent["poids"];
+        $sexe = $reqContent["sexe"];
+        $observations = $reqContent["observations"];
+        $numeroTelephone = $reqContent["numerotelephone"];
+        $numeroPieceID = $reqContent["numeropieceid"];
+        $couleurPeau = $reqContent["couleurpeau"];
+        $couleurYeux = $reqContent["couleuryeux"];
+        $couleurCheveux = $reqContent["couleurcheveux"];
+        $dateNaissance = $reqContent["datenaissance"];
+        $lieuNaissance = $reqContent["lieunaissance"];
 
         $fugitif = new Fugitif();
         $fugitif->setNom($nom);
@@ -156,7 +240,7 @@ class CrudController extends AbstractController
         $fugitif->setNumeroPieceID($numeroPieceID);
         $fugitif->setNumeroTelephone($numeroTelephone);
 
-        $nationalite = $this->getNationalite($request, $em);
+        $nationalite = $this->getNationalite($reqContent, $em);
 
         $natFugitif = new NationaliteFugitif();
         $natFugitif->setNationalite($nationalite);

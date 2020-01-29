@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="search")
+     * @Route("/search", name="search", methods="GET")
      */
     public function index(Request $request, FugitifRepository $repository) : Response
     {

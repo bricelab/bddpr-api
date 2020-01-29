@@ -46,8 +46,9 @@
                 <img class = "img-thumbnail" alt = "mjl-logo" title = "" src = "./resources/img/mjl-logo.png" width = "200em" />
             </div>
 
-            <form class = "col-6 offset-3" method="POST" action="http://localhost:8000/data">
-                <h4 class = "mb-5">Ajout de données</h4>
+            <form class = "col-6 offset-3" method="POST" action = "">
+                <h4>Ajout de données</h4>
+                <hr class = "mb-5"/>
 
                 <div class="accordion" id="accordionExample">
 
@@ -67,87 +68,97 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Nom</label>
-                                        <input type="text" class="form-control" placeholder="Nom">
+                                        <input type="text" class="form-control" placeholder="Nom" name = "nom">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">Prénoms</label>
-                                        <input type="text" class="form-control" placeholder="Prénoms">
+                                        <input type="text" class="form-control" placeholder="Prénoms" name = "prenoms">
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Adresse</label>
-                                        <input type="text" class="form-control" placeholder="Adresse">
+                                        <input type="text" class="form-control" placeholder="Adresse" name = "adresse">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">Alias</label>
-                                        <input type="text" class="form-control" placeholder="Alias">
+                                        <input type="text" class="form-control" placeholder="Alias" name = "alias">
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
-                                        <label for="exampleInputEmail1">Sexe</label>
-                                        <select class="form-control" id="exampleFormControlSelect1">
+                                        <label for="exampleInputEmail1" >Sexe</label>
+                                        <select class="form-control" id="exampleFormControlSelect1" name = "sexe">
                                             <option value = "">Masculin</option>
                                             <option value = "">Féminin</option>
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="exampleInputEmail1">Surnom</label>
-                                        <input type="text" class="form-control" placeholder="Alias">
+                                        <label for="exampleInputEmail1" name = "surnom">Surnom</label>
+                                        <input type="text" class="form-control" placeholder="Surnom">
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
-                                        <label for="exampleInputEmail1">Lieu de naissance</label>
-                                        <input type="text" class="form-control" placeholder="Lieu de naissance">
+                                        <label for="exampleInputEmail1" >Lieu de naissance</label>
+                                        <input type="text" class="form-control" placeholder="Lieu de naissance" name = "lieunaissance">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">date de naissance</label>
-                                        <input type="date" class="form-control" placeholder="Alias">
+                                        <input type="date" class="form-control" placeholder="Alias" name = "datenaissance">
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Taille</label>
-                                        <input type="number" class="form-control" value = "">
+                                        <input type="number" class="form-control" value = "1.5" name = "taille">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">Poids</label>
-                                        <input type="number" class="form-control" value = "">
+                                        <input type="number" class="form-control" value = "50" name = "poids">
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Numero Téléphone</label>
-                                        <input type="text" class="form-control" placeholder="Numero Téléphone">
+                                        <input type="text" class="form-control" placeholder="Numero Téléphone" name = "numerotelephone">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">Numero Pièce Identité</label>
-                                        <input type="text" class="form-control" placeholder="Numero Pièce Identité">
+                                        <input type="text" class="form-control" placeholder="Numero Pièce Identité" name = "numeropieceid">
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <label for="exampleInputEmail1">Nationalité</label>
+                                        <select class="form-control" id="exampleFormControlSelect1" name = "nationalite">
+                                            <option value = "Béninoise">Oui</option>
+                                            <option value = "Nigériane">Non</option>
+                                        </select>
                                     </div>
                                 </div>
                 
                                 <div class="row mt-3">
                                     <div class="col">
-                                        <label for="exampleInputEmail1">Numero Pièce Identité</label>
-                                        <textarea class = "form-control" rows= "3" id = "" ></textarea>
+                                        <label for="exampleInputEmail1">Observations</label>
+                                        <textarea class = "form-control" rows= "3" id = "" name = "observations"></textarea>
                                     </div>
                                 </div>
-                
-                                <div class="row mt-5">
+
+                                <!-- <div class="row mt-5">
                                     <div class="col">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="customFile">
                                             <label class="custom-file-label" for="customFile">Choisir Fugitif photo de profil</label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
 
                             </div>
                         
@@ -171,22 +182,25 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Réference</label>
-                                        <input type="text" class="form-control" placeholder="Référence">
+                                        <input type="text" class="form-control" placeholder="Référence" name = "reference">
                                     </div>
                                     <div class="col">
-                                        <label for="exampleInputEmail1">Prénoms</label>
-                                        <input type="text" class="form-control" placeholder="">
+                                        <label for="exampleInputEmail1">Type</label>
+                                        <select class="form-control" id="exampleFormControlSelect1" name = "typemandat">
+                                            <option value = "national">National</option> <!-- TODO -->
+                                            <option value = "international">International</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Date Emission</label>
-                                        <input type="date" class="form-control" placeholder="Référence">
+                                        <input type="date" class="form-control" name = "dateemission">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">executé</label>
-                                        <select class="form-control" id="exampleFormControlSelect1">
+                                        <select class="form-control" id="exampleFormControlSelect1" name = "execute">
                                             <option value = "">Oui</option>
                                             <option value = "">Non</option>
                                         </select>
@@ -196,24 +210,18 @@
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Chambres</label>
-                                        <input type="text" class="form-control" placeholder="Référence">
+                                        <input type="text" class="form-control" placeholder="Chambres" name = "chambres">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputEmail1">Juridictions</label>
-                                        <input type="text" class="form-control" placeholder="">
+                                        <input type="text" class="form-control" placeholder="Juridictions" name = "juridictions">
                                     </div>
                                 </div>
 
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label for="exampleInputEmail1">Infractions</label>
-                                        <input type="text" class="form-control" placeholder="Référence">
-                                    </div>
-                                    <div class="col">
-                                        <label for="exampleInputEmail1">Mandat</label>
-                                        <select class="form-control" id="exampleFormControlSelect1">
-                                            <option value = ""></option>
-                                        </select>
+                                        <input type="text" class="form-control" placeholder="Infractions" name = "infractions">
                                     </div>
                                 </div>
 
@@ -225,11 +233,17 @@
 
                 </div>
 
-                
-                <div class = "text-center mt-3">
-                    <button class = "btn btn-primary">Enregistrer</button>
+                <input type="text" id = "inputToken" class="form-control" hidden>
+
+                <div class = "text-center my-3">
+                    <button class = "btn btn-primary" id = "btnSave">Enregistrer</button>
                 </div>
 
             </form> 
+
+            <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script type="application/javascript" src = "./resources/js/params.js"></script>
+            <script type="application/javascript" src = "./resources/js/data.js"></script>
     </body>
 </html>

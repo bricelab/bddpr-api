@@ -46,61 +46,59 @@
                 <img class = "img-thumbnail" alt = "mjl-logo" title = "" src = "./resources/img/mjl-logo.png" width = "200em" />
             </div>
 
-            <form class = "col-6 offset-3" method="POST" action="http://localhost:8000/data">
-                <h4 class = "mb-5">Recherche de données</h4>
+            <!-- <form class = "col-6 offset-3" method="POST" action="http://localhost:8000/data"> -->
+            <div class = "col-6 offset-3">
+                <h4>Recherche de données</h4>
+                <hr class = "mb-5"/>
 
                 <div class="row mt-3">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="Rechercher">
+                        <input type="text" class="form-control" placeholder="Rechercher" id = "searchInput"/>
                     </div>
                     <div class="col">
-                        <select class="form-control" id="exampleFormControlSelect1">
-                            <option value = "">Tous les champs</option>
-                            <option value = "">Nom</option>
-                            <option value = "">Prénoms</option>
-                            <option value = "">Adresse</option>
-                            <option value = "">Infractions</option>
-                            <option value = "">Juridictions</option>
-                            <option value = "">Nationalité</option>
+                        <select class="form-control" id="criteriaSelectTag">
+                            <option value = "" selected>Tous les champs</option>
+                            <option value = "nom">Nom</option>
+                            <option value = "prenoms">Prénoms</option>
+                            <option value = "adresse">Adresse</option>
+                            <option value = "infractions">Infractions</option>
+                            <option value = "juridictions">Juridictions</option>
+                            <option value = "nationalite">Nationalité</option>
                         </select>
                     </div>
                 </div>
 
                 <div class = "text-center mt-3">
-                    <button class = "btn btn-primary">Enregistrer</button>
+                    <button class = "btn btn-primary" id = "btnSearch">Rechercher</button>
+                    <button class = "btn btn-secondary" id = "btnInitiate">Réinitialiser</button>
                 </div>
 
-            </form> 
+                <table class="table table-striped mt-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénoms</th>
+                        <th scope="col">Infractions</th>
+                        <th scope="col">Juridictions</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                      </tr> -->
+                    </tbody>
+                </table>
 
-            <table class="table table-striped col-6 offset-3 mt-5">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-            </table>
+            </div>
+            <!-- </form>  -->
+
+            <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script type="application/javascript" src = "./resources/js/params.js"></script>
+            <script type="application/javascript" src = "./resources/js/search.js"></script>
     </body>
 </html>
