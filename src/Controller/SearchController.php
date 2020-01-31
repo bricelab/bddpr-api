@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="search", methods="GET")
+     * @Route("/api/search", name="search", methods="GET")
      */
     public function index(Request $request, FugitifRepository $repository) : Response
     {
@@ -31,6 +31,28 @@ class SearchController extends AbstractController
             return $this->json($message, Response::HTTP_BAD_REQUEST);
         }
             
+        return $this->json($data, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
+    }
+
+    /**
+     * @Route("/api/{entity}", name = "entity_path", methods="GET")
+     */
+    public function findClassObjects(Request $request, $entity){
+
+        $entity = "App\\Entity\\".$entity;
+
+        if (!class_exists($entity)){
+            $message = "Erreur : Cette classe n'existe pas !";
+            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $data = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository($entity)
+                            ->findAll();
+
+        $data = ["className" => $entity, "objects"  =>  $data];
+                            
         return $this->json($data, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
     }
 }

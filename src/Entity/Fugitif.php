@@ -181,7 +181,7 @@ class Fugitif
     /**
      * @var Collection|Mandat[]
      * 
-     * @ORM\OneToMany(targetEntity="App\Entity\Mandat", mappedBy="fugitif", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Mandat", mappedBy="fugitif", orphanRemoval=true, cascade={"persist"})
      * @Groups("search:read")
      */
     private $mandats;

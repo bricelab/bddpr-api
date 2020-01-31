@@ -19,7 +19,7 @@ function onDataFetchSuccess(response, status){
 }
 
 function onDataFetchFailure(response, status, error){
-
+    console.log("Failed to search data : ", response, status, error);
 }
 
 function onDataFetchCompletion(response, status){
@@ -72,8 +72,8 @@ $("body").on("click", ".delete_menu_action", function(){
 
 function deleteItem(id){
 
-    var route = site_url+"/delete";
-    var data = JSON.stringify({"class":"Fugitif","property":"id","value": ""+id+""});
+    var route = site_url+"/delete/Fugitif";
+    var data = JSON.stringify({"property":"id","value": ""+id+""});
     // var data = "class=Fugitif&property=id&value="+id;
     console.log(route, data);
 
@@ -90,7 +90,7 @@ function onItemDeletionSuccess(response, status){
 }
 
 function onItemDeletionFailure(response, status, error){
-    console.log("request failed", status, error);
+    console.log("Failed to delete item", response, status, error);
 
 }
 
