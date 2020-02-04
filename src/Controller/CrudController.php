@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Fugitif;
+use App\Entity\NationaliteFugitif;
+use App\Repository\NationaliteRepository;
+use App\Repository\TypeMandatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class CrudController extends AbstractController
 {
@@ -22,95 +28,144 @@ class CrudController extends AbstractController
     //     ]);
     // }
 
-    // /**
-    //  * @Route("/api/update", name = "data_update_path", methods="POST")
-    //  */
-
-    // public function update(Request $request, EntityManagerInterface $em) : Response
-    // {
-        
-    // }
-
     /**
-     * @Route("/api/delete/{className}", name = "data_deletion_path", methods="POST")
+     * @Route("/api/fugitif/{id}", name = "update_fugitif", methods="PUT")
      */
 
-    public function delete(Request $request, EntityManagerInterface $em, $className) : Response
+    public function update(Fugitif $fugitif, Request $request, SerializerInterface $serializer, EntityManagerInterface $em, 
+    NationaliteRepository $nationaliteRepository, TypeMandatRepository $typeMandatRepository) : Response
     {
-        $params = json_decode($request->getContent(), true);
-
-        if ($params == null){
-            $message = "Bad request";
-            return $this->json($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        $property = $params["property"];
-        $value = $params["value"];
-
-        $className = "App\\Entity\\".$className;
-        if (!class_exists($className)){
-            $message = "Erreur : Cette classe n'existe pas !";
-            return $this->json($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        if (!property_exists($className, $property)){
-            $message = "Erreur : Cette proprieté n'existe pas dans cette classe !";
-            return $this->json($message, Response::HTTP_BAD_REQUEST);
-        }
-    
-        $item = $em->getRepository($className)->findOneBy([$property => $value]);
-
-        if ($item == NULL){
-            $message = "Erreur : Cet objet ".($property)." : ".($value)." n'existe pas !";
-            return $this->json($message, Response::HTTP_BAD_REQUEST);
-        }
-
         try {
-            //code...
-            $em->remove($item);
-            $em->flush();
+            /** @var Fugitif */
+            $fug = $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [ "groups" => "search:read" ]);
 
-            return $this->json("Item deleted successfully", Response::HTTP_OK, []);
+        } catch (NotEncodableValueException $e) {
+            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch (\Exception $ex) {
+            return $this->json($ex->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
 
-        } catch (\Throwable $th) {
-            //throw $th;
-            return $this->json("An error occured while deleting the item with ".$property." as ".$value, Response::HTTP_BAD_REQUEST);
-        }                
+        // $fugitif->set
+        $em->flush();
+
+        return $this->json($fugitif, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
+    }
+
+    /**
+     * @Route("/api/fugitif/{id}", name = "data_deletion_path", methods="DELETE")
+     */
+
+    public function delete(Fugitif $fugitif, EntityManagerInterface $em) : Response
+    {
+        $em->remove($fugitif);
+        $em->flush();
+        return $this->json("Item deleted successfully", Response::HTTP_OK, []);
+
+        // $params = json_decode($request->getContent(), true);
+
+        // if ($params == null){
+        //     $message = "Bad request";
+        //     return $this->json($message, Response::HTTP_BAD_REQUEST);
+        // }
+
+        // $property = $params["property"];
+        // $value = $params["value"];
+
+        // $className = "App\\Entity\\".$className;
+        // if (!class_exists($className)){
+        //     $message = "Erreur : Cette classe n'existe pas !";
+        //     return $this->json($message, Response::HTTP_BAD_REQUEST);
+        // }
+
+        // if (!property_exists($className, $property)){
+        //     $message = "Erreur : Cette proprieté n'existe pas dans cette classe !";
+        //     return $this->json($message, Response::HTTP_BAD_REQUEST);
+        // }
+    
+        // $item = $em->getRepository($className)->findOneBy([$property => $value]);
+
+        // if ($item == NULL){
+        //     $message = "Erreur : Cet objet ".($property)." : ".($value)." n'existe pas !";
+        //     return $this->json($message, Response::HTTP_BAD_REQUEST);
+        // }
+
+        // try {
+        //     //code...
+        //     $em->remove($item);
+        //     $em->flush();
+
+        //     return $this->json("Item deleted successfully", Response::HTTP_OK, []);
+
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     return $this->json("An error occured while deleting the item with ".$property." as ".$value, Response::HTTP_BAD_REQUEST);
+        // }                
 
     }
 
     /**
-     * @Route("/api/add/{className}", name = "data_addition_path", methods="POST")
+     * @Route("/api/fugitif", name = "add_fugitif", methods="POST")
      */
 
-    public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, $className) : Response
+    public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, 
+    NationaliteRepository $nationaliteRepository, TypeMandatRepository $typeMandatRepository) : Response
     {
-        //$em = $this->getDoctrine()
-        //           ->getManager();
+        
+        try {
+            /** @var Fugitif */
+        $fugitif = $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [ "groups" => "search:read" ]);
 
-        // dd($this->getNamespaceName());
-        $className = "App\\Entity\\".$className;
-        if (!class_exists($className)){
-            $message = "Erreur : Cette classe n'existe pas !";
-            return $this->json($message, Response::HTTP_BAD_REQUEST);
+        } catch (NotEncodableValueException $e) {
+            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch (\Exception $ex) {
+            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
+        
+        foreach ($fugitif->getListeNationalites() as $nat) {
+            $nationalite = $nationaliteRepository->findOneBy(["libelle" => $nat->getNationalite()->getLibelle() ]);
+            if($nationalite){
+                $fugitif->removeListeNationalite($nat);
+                $natfug = (new NationaliteFugitif())
+                    ->setFugitif($fugitif)
+                    ->setNationalite($nationalite);
+                $fugitif->addListeNationalite($natfug);
+            }
+        }
+        
+        foreach ($fugitif->getMandats() as $mandat) {
+            $typemandat = $typeMandatRepository->findOneBy(["libelle" => $mandat->getTypeMandat()->getLibelle() ]);
+            if ($typemandat){
+                $mandat->setTypeMandat($typemandat);
+            }
+            //$em->persist($mandat);
+        }
+        $em->persist($fugitif);
+        $em->flush();
+        return $this->json($fugitif, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
+        //dd($fugitif);
 
-        // $reqContent = json_decode($request->getContent(), true);
+        // $className = "App\\Entity\\".$className;
+        // if (!class_exists($className)){
+        //     $message = "Erreur : Cette classe n'existe pas !";
+        //     return $this->json($message, Response::HTTP_BAD_REQUEST);
+        // }
 
-        // dd($reqContent);
-        $object = $serializer->deserialize($request->getContent(), $className, "json");
+        // // $reqContent = json_decode($request->getContent(), true);
+
+        // // dd($reqContent);
+        // $object = $serializer->deserialize($request->getContent(), $className, "json");
 
         // dd($object);
-        $jsonResponse = null;
+        //$jsonResponse = null;
 
         // try {
 
             //code...
-            $em->persist($object);
-            $em->flush();
+            // $em->persist($object);
+            // $em->flush();
 
-            $message = "Executed successfully";
-            $jsonResponse = $this->json($message, Response::HTTP_OK);
+            // $message = "Executed successfully";
+            // $jsonResponse = $this->json($message, Response::HTTP_OK);
 
         // } catch (\Throwable $th) {
 
@@ -120,6 +175,6 @@ class CrudController extends AbstractController
 
         // }
 
-        return $jsonResponse;
+        //return $jsonResponse;
     }
 }

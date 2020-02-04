@@ -9,7 +9,6 @@ fetchEntities("Nationalite");
 
 function fetchEntities(className){
     var route = site_url+"/"+className;
-    console.log(route);
 
     performAjaxRequest(route, "GET", "json", "", onEntitiesFetchedSuccess, onEntitiesFetchedFailure, onEntitiesFetchedCompletion);
 }
@@ -57,7 +56,7 @@ $("#btnSave").click(function(e){
 });
 
 function addData(form){
-    var route = site_url+"/add/Fugitif";
+    var route = site_url+"/api/fugitif";
     var data = JSON.stringify(getJsonObject(form));
 
     // console.log(route, data);
@@ -83,7 +82,6 @@ function getJsonObject(form){
     // console.log(form.find("[name='nom']").val());
     var jsonObject = 
     {
-        "id": 0,
         "nom": form.find("[name='nom']").val(),
         "prenoms": form.find("[name='prenoms']").val(),
         "nomMarital": "",
@@ -105,14 +103,12 @@ function getJsonObject(form){
         "observations": "MANDAT D’ARRET OU CONDAMNEES ET EN FUITE",
         "mandats": [
             {
-                "id": 0,
                 "reference": null,
                 "execute": false,
                 "infractions": form.find("[name='infractions']").val(),
                 "chambres": form.find("[name='chambres']").val(),
                 "juridictions": form.find("[name='juridictions']").val(),
                 "typeMandat": {
-                    "id": 0,
                     "libelle": form.find("[name='typemandat']").val()
                 },
                 "dateEmission": "1899-12-30T00:00:00+00:13"
@@ -120,9 +116,7 @@ function getJsonObject(form){
         ],
         "listeNationalites": [
             {
-                "id": 0,
                 "nationalite": {
-                    "id": 0,
                     "libelle": form.find("[name='nationalite']").val()
                 },
                 "principale": true
@@ -131,4 +125,33 @@ function getJsonObject(form){
     };
     // console.log(jsonString);
     return jsonObject;
+}
+
+$(".btn#loginBtn").click(function(){
+
+    var email = $("#loginModal .form-control[type='email']").val();
+    var password = $("#loginModal .form-control[type='password']").val();
+
+    var route = site_url+"/auth_token";
+    var data = JSON.stringify({"email": email, "password": password});
+
+    requestToken(route, "POST", "json", data, onAuthSuccess, onAuthFailure, onAuthCompletion);
+
+});
+
+function onAuthSuccess(response, status){
+    if (status == "success"){
+        console.log("Setting cookies ! ");
+        Cookies.set(TOKEN_COOKIE_NAME, response.token);
+        $(".modal#loginModal").modal("hide");
+        toast("Authenticated successfully ! ");
+    }
+}
+
+function onAuthFailure(response, status, error){
+    console.log(response, status);
+}
+
+function onAuthCompletion(response, status){
+    console.log("Ajax request completed");
 }

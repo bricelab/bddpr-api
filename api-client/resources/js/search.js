@@ -8,7 +8,7 @@ var currentItemId = 0;
 
 function fetchData(field, value){
 
-    var route = site_url+"/search?field="+field+"&q="+value;
+    var route = site_url+"/api/search?field="+field+"&q="+value;
     console.log(route);
     
     performAjaxRequest(route, "GET", "json", "", onDataFetchSuccess, onDataFetchFailure, onDataFetchCompletion);
@@ -72,14 +72,12 @@ $("body").on("click", ".delete_menu_action", function(){
 
 function deleteItem(id){
 
-    var route = site_url+"/delete/Fugitif";
-    var data = JSON.stringify({"property":"id","value": ""+id+""});
+    var route = site_url+"/api/fugitif/"+id;
     // var data = "class=Fugitif&property=id&value="+id;
-    console.log(route, data);
 
     currentItemId = id;
     
-    performAjaxRequest(route, "POST", "json", data, onItemDeletionSuccess, onItemDeletionFailure, onItemDeletionCompletion);
+    performAjaxRequest(route, "DELETE", "json", "", onItemDeletionSuccess, onItemDeletionFailure, onItemDeletionCompletion);
 }
 
 function onItemDeletionSuccess(response, status){
