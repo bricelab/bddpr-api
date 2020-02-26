@@ -23,5 +23,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\EventListener\EntityEventSubscriber:
+        arguments: ['@Symfony\Component\Security\Core\Security', '@doctrine.orm.default_entity_manager']
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

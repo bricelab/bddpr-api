@@ -7,8 +7,11 @@
 // fetching entities such as Nationalite
 fetchEntities("Nationalite");
 
+// fetching entities such as TypeMandat
+fetchEntities("TypeMandat");
+
 function fetchEntities(className){
-    var route = site_url+"/"+className;
+    var route = site_url+"/api/"+className;
 
     performAjaxRequest(route, "GET", "json", "", onEntitiesFetchedSuccess, onEntitiesFetchedFailure, onEntitiesFetchedCompletion);
 }
@@ -18,6 +21,9 @@ function onEntitiesFetchedSuccess(response, status){
         var className = response.className.split("\\");
         className = className[className.length-1];
         if (className == "Nationalite"){
+            displayEntities(className, response.objects);
+        }
+        if (className == "TypeMandat"){
             displayEntities(className, response.objects);
         }
     }
@@ -40,18 +46,22 @@ function displayEntities(className, objects){
             tag.append('<option value = "'+element.libelle+'">'+element.libelle+'</option>');
         });
     }
+
+    if (className == "TypeMandat"){
+        var tag = $("#selectTagTypeMandat");
+        tag.empty();
+
+        objects.forEach(element => {
+            tag.append('<option value = "'+element.libelle+'">'+element.libelle+'</option>');
+        });
+    }
 }
 
 $("#btnSave").click(function(e){
     e.preventDefault();
-
-    // var token = prompt("Veuillez entrer votre token");
-    // var form = $(this).parents("form");
-
-    // form.find("#inputToken").val(token);
-    // console.log(form.html());
     
-    // form.submit();
+    var form = $("#dataModal form");
+
     addData(form);
 });
 
@@ -59,13 +69,12 @@ function addData(form){
     var route = site_url+"/api/fugitif";
     var data = JSON.stringify(getJsonObject(form));
 
-    // console.log(route, data);
     performAjaxRequest(route, "POST", "json", data, onDataAdditionSuccess, onDataAdditionFailure, onDataAdditionCompletion);
 }
 
 function onDataAdditionSuccess(response, status){
     if (status == "success"){
-        alert("data added successfully");
+        toast("data added successfully");
     }
 }
 
@@ -79,7 +88,6 @@ function onDataAdditionCompletion(response, status){
 
 function getJsonObject(form){
 
-    // console.log(form.find("[name='nom']").val());
     var jsonObject = 
     {
         "nom": form.find("[name='nom']").val(),
@@ -87,7 +95,7 @@ function getJsonObject(form){
         "nomMarital": "",
         "alias": form.find("[name='alias']").val(),
         "surnom": form.find("[name='surnom']").val(),
-        "dateNaissance": null,
+        "dateNaissance": form.find("[name='datenaissance']").val(),
         "lieuNaissance": form.find("[name='lieunaissance']").val(),
         "adresse": form.find("[name='adresse']").val(),
         "taille": null,
@@ -100,18 +108,18 @@ function getJsonObject(form){
         "sexe": form.find("[name='sexe']").val(),
         "numeroPieceID": form.find("[name='numeropieceid']").val(),
         "numeroTelephone": form.find("[name='numerotelephone']").val(),
-        "observations": "MANDAT D’ARRET OU CONDAMNEES ET EN FUITE",
+        "observations": form.find("[name='observations']").val(),
         "mandats": [
             {
-                "reference": null,
-                "execute": false,
+                "reference": form.find("[name='reference']").val(),
+                "execute": ((form.find("[name='execute']").val() == "oui") ? true : false),
                 "infractions": form.find("[name='infractions']").val(),
                 "chambres": form.find("[name='chambres']").val(),
                 "juridictions": form.find("[name='juridictions']").val(),
                 "typeMandat": {
                     "libelle": form.find("[name='typemandat']").val()
                 },
-                "dateEmission": "1899-12-30T00:00:00+00:13"
+                "dateEmission": form.find("[name='dateemission']").val()
             }
         ],
         "listeNationalites": [
@@ -123,35 +131,7 @@ function getJsonObject(form){
             }
         ]
     };
-    // console.log(jsonString);
+    console.log("test", jsonObject);
     return jsonObject;
 }
 
-$(".btn#loginBtn").click(function(){
-
-    var email = $("#loginModal .form-control[type='email']").val();
-    var password = $("#loginModal .form-control[type='password']").val();
-
-    var route = site_url+"/auth_token";
-    var data = JSON.stringify({"email": email, "password": password});
-
-    requestToken(route, "POST", "json", data, onAuthSuccess, onAuthFailure, onAuthCompletion);
-
-});
-
-function onAuthSuccess(response, status){
-    if (status == "success"){
-        console.log("Setting cookies ! ");
-        Cookies.set(TOKEN_COOKIE_NAME, response.token);
-        $(".modal#loginModal").modal("hide");
-        toast("Authenticated successfully ! ");
-    }
-}
-
-function onAuthFailure(response, status, error){
-    console.log(response, status);
-}
-
-function onAuthCompletion(response, status){
-    console.log("Ajax request completed");
-}

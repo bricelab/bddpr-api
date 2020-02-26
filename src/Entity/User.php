@@ -8,9 +8,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(schema="metier")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
+    use TimestampTrait;
+    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

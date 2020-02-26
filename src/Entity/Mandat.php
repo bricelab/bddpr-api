@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Mandat
 {
     use TimestampTrait;
+    use UserActionsTrait;
     
     /**
      * @ORM\Id()
@@ -71,6 +72,12 @@ class Mandat
      * @Groups("search:read")
      */
     private $dateEmission;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     * @Groups("search:read")
+     */
+    private $archived;
 
     public function getId(): ?int
     {
@@ -169,6 +176,18 @@ class Mandat
     public function setDateEmission(\DateTimeInterface $dateEmission): self
     {
         $this->dateEmission = $dateEmission;
+
+        return $this;
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->archived;
+    }
+
+    public function setArchived(bool $archived): self
+    {
+        $this->archived = $archived;
 
         return $this;
     }

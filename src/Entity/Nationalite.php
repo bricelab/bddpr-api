@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Nationalite
 {
     use TimestampTrait;
+    use UserActionsTrait;
 
     /**
      * @ORM\Id()

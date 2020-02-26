@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Fugitif;
+use App\Entity\Mandat;
 use App\Entity\NationaliteFugitif;
 use App\Repository\NationaliteRepository;
 use App\Repository\TypeMandatRepository;
@@ -14,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class CrudController extends AbstractController
 {
@@ -37,7 +39,7 @@ class CrudController extends AbstractController
     {
         try {
             /** @var Fugitif */
-            $fug = $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [ "groups" => "search:read" ]);
+            $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $fugitif] /* [ "groups" => "search:read" ] */);
 
         } catch (NotEncodableValueException $e) {
             return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
@@ -45,20 +47,43 @@ class CrudController extends AbstractController
             return $this->json($ex->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
-        // $fugitif->set
+        foreach ($fugitif->getListeNationalites() as $nat) {
+            $nationalite = $nationaliteRepository->findOneBy(["libelle" => $nat->getNationalite()->getLibelle() ]);
+            if($nationalite){
+                $fugitif->removeListeNationalite($nat);
+                $natfug = (new NationaliteFugitif())
+                    ->setFugitif($fugitif)
+                    ->setNationalite($nationalite);
+                $fugitif->addListeNationalite($natfug);
+            }
+        }
+        
+        foreach ($fugitif->getMandats() as $mandat) {
+            $typemandat = $typeMandatRepository->findOneBy(["libelle" => $mandat->getTypeMandat()->getLibelle() ]);
+            if ($typemandat){
+                $mandat->setTypeMandat($typemandat);
+            }
+        }
         $em->flush();
-
         return $this->json($fugitif, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
     }
 
     /**
-     * @Route("/api/fugitif/{id}", name = "data_deletion_path", methods="DELETE")
+     * @Route("/api/mandat/{id}", name = "data_deletion_path", methods="DELETE")
      */
 
-    public function delete(Fugitif $fugitif, EntityManagerInterface $em) : Response
+    public function delete(Mandat $mandat, EntityManagerInterface $em) : Response
     {
-        $em->remove($fugitif);
-        $em->flush();
+        // insted of archiving the data, it's gonna be archived
+        try {
+            //code...
+            $mandat->setArchived(true);
+            // $em->remove($fugitif);
+            $em->flush();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->json("An error occured when performing the deletion", Response::HTTP_BAD_REQUEST, []);
+        }
         return $this->json("Item deleted successfully", Response::HTTP_OK, []);
 
         // $params = json_decode($request->getContent(), true);
@@ -113,12 +138,12 @@ class CrudController extends AbstractController
         
         try {
             /** @var Fugitif */
-        $fugitif = $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [ "groups" => "search:read" ]);
+            $fugitif = $serializer->deserialize($request->getContent(), Fugitif::class, 'json', [ "groups" => "search:read" ]);
 
         } catch (NotEncodableValueException $e) {
             return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $ex) {
-            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
+            return $this->json($ex->getMessage(), Response::HTTP_BAD_REQUEST);
         }
         
         foreach ($fugitif->getListeNationalites() as $nat) {

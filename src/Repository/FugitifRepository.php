@@ -25,8 +25,6 @@ class FugitifRepository extends ServiceEntityRepository
      */
     public function findSearch(Search $search) : ?array
     {
-        // dd();
-
         $query = $this->createQueryBuilder('f')
             ->orderBy('f.id', 'ASC')
             //->setMaxResults(10)
@@ -67,11 +65,15 @@ class FugitifRepository extends ServiceEntityRepository
                     ;
                 break;
                 case Search::FIELD_NATIONALITE:
+                    $nats = explode("|", $search->q);
                     $query
                         ->join("f.listeNationalites", "fn")
-                        ->join("fn.nationalite", "n")
-                        ->where('UPPER(n.libelle) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
+                        ->join("fn.nationalite", "n");
+
+                    foreach ($nats as $nat) {
+                        # code...
+                        $query->orWhere('UPPER(n.libelle) LIKE UPPER('+"%".$search->q."%"+')');
+                    }
                     ;
                 break;
                 case Search::FIELD_INFRACTIONS:

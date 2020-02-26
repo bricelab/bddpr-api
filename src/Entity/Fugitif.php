@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Fugitif
 {
     use TimestampTrait;
+    use UserActionsTrait;
     
     /**
      * @var integer ID de l'entité

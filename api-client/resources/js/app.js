@@ -13,6 +13,10 @@ var TOKEN_COOKIE_NAME = "bddpr-api-token";
 // Cookies.remove(TOKEN_COOKIE_NAME);
 if (Cookies.get(TOKEN_COOKIE_NAME) == undefined)
     $(".modal#loginModal").modal();
+else{
+  console.log("Token", Cookies.get(TOKEN_COOKIE_NAME));
+  fetchData("", "");
+}
     
 
 // Generic functions
@@ -64,3 +68,67 @@ function toast(message) {
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ snackbar.removeClass("show"); }, 3000);
 } 
+
+$(".btn#loginBtn").click(function(){
+
+  var email = $("#loginModal .form-control[type='email']").val();
+  var password = $("#loginModal .form-control[type='password']").val();
+
+  var route = site_url+"/auth_token";
+  var data = JSON.stringify({"email": email, "password": password});
+
+  requestToken(route, "POST", "json", data, onAuthSuccess, onAuthFailure, onAuthCompletion);
+
+});
+
+function onAuthSuccess(response, status){
+  if (status == "success"){
+      console.log("Setting cookies ! ");
+      Cookies.set(TOKEN_COOKIE_NAME, response.token);
+      $(".modal#loginModal").modal("hide");
+      toast("Authenticated successfully ! ");
+
+      // then, all data are upload 
+      fetchData("", "");
+  }
+}
+
+function onAuthFailure(response, status, error){
+  toast("Invalid credentials");
+  $("#loginModal").find(".form-control").addClass("is-invalid");
+  console.log(response, status);
+
+  fetchData("", ""); // fetch all data
+}
+
+function onAuthCompletion(response, status){
+  console.log("Ajax request completed");
+}
+
+$("#loginModal .form-control").on("keypress", function(){
+  $(this).removeClass("is-invalid");
+});
+
+function fetchData(field, value){
+
+  var route = site_url+"/api/search?field="+field+"&q="+value;
+  console.log(route);
+  
+  performAjaxRequest(route, "GET", "json", "", onDataFetchSuccess, onDataFetchFailure, onDataFetchCompletion);
+}
+
+function onDataFetchSuccess(response, status){
+  displayData(response, status);
+
+  // removing possible spinners from the interface
+  $(".spinner-border").parent().remove();
+}
+
+function onDataFetchFailure(response, status, error){
+  console.log("Failed to search data : ", response, status, error);
+}
+
+function onDataFetchCompletion(response, status){
+
+}
+

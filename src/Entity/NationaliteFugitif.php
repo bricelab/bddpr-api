@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class NationaliteFugitif
 {
     use TimestampTrait;
+    use UserActionsTrait;
     
     /**
      * @ORM\Id()
