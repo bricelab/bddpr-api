@@ -62,8 +62,39 @@ $("#btnSave").click(function(e){
     
     var form = $("#dataModal form");
 
-    addData(form);
+    if (form.hasClass("update-data"))
+        updateData(form);
+    else if (form.hasClass("add-data"))
+        addData(form);
 });
+
+function updateData(form){
+
+
+    var object = getCurrentObject();
+    console.log("--------------", object);
+    var route = site_url+"/api/fugitif/"+object.id;
+    var data = JSON.stringify(getJsonObject(form));
+
+    performAjaxRequest(route, "PUT", "json", data, onDataUpdateSuccess, onDataUpdateFailure, onDataUpdateCompletion);
+}
+
+function onDataUpdateSuccess(response, status){
+    console.log("OK : ", response);
+    if (status == "success"){
+        $(".modal.show").modal("hide");
+        toast("data updated successfully");
+    }
+}
+
+function onDataUpdateFailure(response, status, error){
+    console.log(response, status);
+}
+
+function onDataUpdateCompletion(response, status){
+    console.log("Ajax request completed");
+}
+
 
 function addData(form){
     var route = site_url+"/api/fugitif";
@@ -73,7 +104,9 @@ function addData(form){
 }
 
 function onDataAdditionSuccess(response, status){
+    console.log("OK : ", response);
     if (status == "success"){
+        $(".modal.show").modal("hide");
         toast("data added successfully");
     }
 }
@@ -88,6 +121,13 @@ function onDataAdditionCompletion(response, status){
 
 function getJsonObject(form){
 
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy+"-"+mm+"-"+dd;
+
     var jsonObject = 
     {
         "nom": form.find("[name='nom']").val(),
@@ -95,7 +135,7 @@ function getJsonObject(form){
         "nomMarital": "",
         "alias": form.find("[name='alias']").val(),
         "surnom": form.find("[name='surnom']").val(),
-        "dateNaissance": form.find("[name='datenaissance']").val(),
+        "dateNaissance": ((form.find("[name='datenaissance']").val() == "") ? null : form.find("[name='datenaissance']").val()),
         "lieuNaissance": form.find("[name='lieunaissance']").val(),
         "adresse": form.find("[name='adresse']").val(),
         "taille": null,
@@ -116,10 +156,11 @@ function getJsonObject(form){
                 "infractions": form.find("[name='infractions']").val(),
                 "chambres": form.find("[name='chambres']").val(),
                 "juridictions": form.find("[name='juridictions']").val(),
+                "archived" : false,
                 "typeMandat": {
                     "libelle": form.find("[name='typemandat']").val()
                 },
-                "dateEmission": form.find("[name='dateemission']").val()
+                "dateEmission": ((form.find("[name='dateemission']").val() == "") ? today : form.find("[name='dateemission']").val())
             }
         ],
         "listeNationalites": [
@@ -135,3 +176,13 @@ function getJsonObject(form){
     return jsonObject;
 }
 
+$("#dropdown-item-add").click(function(){
+
+    // clearing modal fields before displaying it
+    var modal = $($(this).attr("data-target"));
+
+    modal.find(".form-control").val("");
+
+    $($(this).attr("data-target")).find("form").removeClass("update-data");
+    $($(this).attr("data-target")).find("form").addClass("add-data");
+});

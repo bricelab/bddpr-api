@@ -70,9 +70,11 @@ class FugitifRepository extends ServiceEntityRepository
                         ->join("f.listeNationalites", "fn")
                         ->join("fn.nationalite", "n");
 
+                    $i = 0;
                     foreach ($nats as $nat) {
                         # code...
-                        $query->orWhere('UPPER(n.libelle) LIKE UPPER('+"%".$search->q."%"+')');
+                        $query->orWhere('UPPER(n.libelle) LIKE UPPER(:searchTerm)');
+                        $query->setParameter('searchTerm', "%".$nat."%");
                     }
                     ;
                 break;
@@ -98,39 +100,38 @@ class FugitifRepository extends ServiceEntityRepository
                     //return [];
             }
         } else {
-           $query
+
+            $values = explode("|", $search->q);
+
+            foreach ($values as $value) {
+                # code...
+                $query
                 ->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%")
 
                 ->orWhere('UPPER(f.prenoms) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%")
 
                 ->orWhere('UPPER(f.adresse) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%")
 
                 ->join("f.mandats", "m")
                 ->orWhere('UPPER(m.juridictions) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%")
 
             
                 ->join("f.listeNationalites", "fn")
                 ->join("fn.nationalite", "n")
                 ->orWhere('UPPER(n.libelle) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%")
             
                 ->join("f.mandats", "ma")
                 ->orWhere('UPPER(ma.infractions) LIKE UPPER(:searchTerm)')
-                ->setParameter('searchTerm', "%".$search->q."%")
+                ->setParameter('searchTerm', "%".$value."%");
+            }
 
                 // ->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm)')
                 // ->setParameter('searchTerm', "%".$search->q."%")
-
-                // ->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm)')
-                // ->setParameter('searchTerm', "%".$search->q."%")
-
-                // ->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm)')
-                // ->setParameter('searchTerm', "%".$search->q."%")
-            ;
         }
         
         //dd($query);

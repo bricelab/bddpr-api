@@ -6,6 +6,7 @@
 
 var site_url = "http://localhost:8000";
 var TOKEN_COOKIE_NAME = "bddpr-api-token";
+var localItems = [];
 
 // var site_url = "http://localhost/web_projects/Professional_Projects/bddpr-api/public";
 
@@ -16,6 +17,28 @@ if (Cookies.get(TOKEN_COOKIE_NAME) == undefined)
 else{
   console.log("Token", Cookies.get(TOKEN_COOKIE_NAME));
   fetchData("", "");
+}
+
+function getCurrentObject(){
+
+  var object = null;
+  console.log("before : ", currentItemId);
+    for (let i = 0; i < localItems.length; i++) {
+        const element = localItems[i];
+        var found = false;
+        for (let j = 0; j < element.mandats.length; j++) {
+            const mandat = element.mandats[j];
+            if (mandat.id == currentItemId){
+                element.mandats.mandat = mandat;
+                object = element;
+                found = true;
+                break;
+           }
+        }
+        if (found)
+            break;
+    }
+  return object;
 }
     
 
@@ -91,14 +114,17 @@ function onAuthSuccess(response, status){
       // then, all data are upload 
       fetchData("", "");
   }
+  else{
+    toast("Invalid credentials");
+    $("#loginModal").find(".form-control").addClass("is-invalid");
+    console.log(response, status);
+  }
 }
 
 function onAuthFailure(response, status, error){
   toast("Invalid credentials");
   $("#loginModal").find(".form-control").addClass("is-invalid");
   console.log(response, status);
-
-  fetchData("", ""); // fetch all data
 }
 
 function onAuthCompletion(response, status){
@@ -118,6 +144,10 @@ function fetchData(field, value){
 }
 
 function onDataFetchSuccess(response, status){
+
+  // saving the received data in a local javascript array
+  localItems = response;
+
   displayData(response, status);
 
   // removing possible spinners from the interface
