@@ -9,7 +9,6 @@ var currentItemId = 0;
 function displayData(data, status){
     // console.log(data, status);
 
-    $("table tbody").empty();
     data.forEach(element => {
 
         element.mandats.forEach(mandat =>{

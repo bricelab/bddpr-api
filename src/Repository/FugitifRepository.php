@@ -30,24 +30,42 @@ class FugitifRepository extends ServiceEntityRepository
             //->setMaxResults(10)
         ;
 
-        if ($search->field) {        
+        if ($search->field) {   
+            
+            $values = explode("|", $search->q);
+
             switch($search->field){
                 case Search::FIELD_NOM:
-                    $query
-                        ->where('UPPER(f.nom) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
+
+                    $i = 0;
+                    foreach ($values as $value) {
+                        # code...
+                        $query->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm'.$i.')');
+                        $query->setParameter('searchTerm'.$i, "%".$value."%");
+                        $i++;
+                    }
                     ;
                 break;
                 case Search::FIELD_PRENOMS:
-                    $query
-                        ->where('UPPER(f.prenoms) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
+
+                    $i = 0;
+                    foreach ($values as $value) {
+                        # code...
+                        $query->orWhere('UPPER(f.prenoms) LIKE UPPER(:searchTerm'.$i.')');
+                        $query->setParameter('searchTerm'.$i, "%".$value."%");
+                        $i++;
+                    }
                     ;
                 break;
                 case Search::FIELD_ADRESSE:
-                    $query
-                        ->where('UPPER(f.adresse) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
+
+                    $i = 0;
+                    foreach ($values as $value) {
+                        # code...
+                        $query->orWhere('UPPER(f.adresse) LIKE UPPER(:searchTerm'.$i.')');
+                        $query->setParameter('searchTerm'.$i, "%".$value."%");
+                        $i++;
+                    }
                     ;
                 break;
                 case Search::FIELD_EXECUTE:
@@ -59,45 +77,45 @@ class FugitifRepository extends ServiceEntityRepository
                 break;
                 case Search::FIELD_JURIDICTION:
                     $query
-                        ->join("f.mandats", "m")
-                        ->where('UPPER(m.juridictions) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
+                        ->join("f.mandats", "m");
+
+                    $i = 0;
+                    foreach ($values as $value) {
+                        # code...
+                        $query->orWhere('UPPER(m.juridictions) LIKE UPPER(:searchTerm'.$i.')');
+                        $query->setParameter('searchTerm'.$i, "%".$value."%");
+                        $i++;
+                    }
                     ;
                 break;
                 case Search::FIELD_NATIONALITE:
-                    $nats = explode("|", $search->q);
+                    
                     $query
                         ->join("f.listeNationalites", "fn")
                         ->join("fn.nationalite", "n");
 
-                    $i = 0;
-                    foreach ($nats as $nat) {
+                    foreach ($values as $value) {
                         # code...
                         $query->orWhere('UPPER(n.libelle) LIKE UPPER(:searchTerm)');
-                        $query->setParameter('searchTerm', "%".$nat."%");
+                        $query->setParameter('searchTerm', "%".$value."%");
                     }
                     ;
                 break;
                 case Search::FIELD_INFRACTIONS:
                     $query
-                        ->join("f.mandats", "m")
-                        ->where('UPPER(m.infractions) LIKE UPPER(:searchTerm)')
-                        ->setParameter('searchTerm', "%".$search->q."%")
-                    ;
+                        ->join("f.mandats", "m");
+
+                    $i = 0;
+                    foreach ($values as $value) {
+                        # code...
+                        $query->orWhere('UPPER(m.infractions) LIKE UPPER(:searchTerm'.$i.')');
+                        $query->setParameter('searchTerm'.$i, "%".$value."%");
+                        $i++;
+                    }
+                    ; 
                 break;
                 default:
                     return null;
-                    // $query
-                    //     ->orWhere('UPPER(f.nom) LIKE UPPER(:searchTerm)')
-                    //     ->setParameter('searchTerm', "%".$search->q."%")
-
-                    //     ->orWhere('UPPER(f.prenoms) LIKE UPPER(:searchTerm)')
-                    //     ->setParameter('searchTerm', "%".$search->q."%")
-
-                    //     ->orWhere('UPPER(f.adresse) LIKE UPPER(:searchTerm)')
-                    //     ->setParameter('searchTerm', "%".$search->q."%")
-                    // ;
-                    //return [];
             }
         } else {
 

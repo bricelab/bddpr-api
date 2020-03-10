@@ -181,7 +181,7 @@ $("#dropdown-item-add").click(function(){
     // clearing modal fields before displaying it
     var modal = $($(this).attr("data-target"));
 
-    modal.find(".form-control").val("");
+    modal.find("input.form-control").val("");
 
     $($(this).attr("data-target")).find("form").removeClass("update-data");
     $($(this).attr("data-target")).find("form").addClass("add-data");

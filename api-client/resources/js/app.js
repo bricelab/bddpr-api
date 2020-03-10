@@ -139,6 +139,16 @@ function fetchData(field, value){
 
   var route = site_url+"/api/search?field="+field+"&q="+value;
   console.log(route);
+
+  $("table tbody").empty();
+  
+  if ($(".spinner-border").length == 0){
+    $("table").parent().append('<div class = "text-center pt-5">\
+                                <div class="spinner-border" role="status">\
+                                    <span class="sr-only">Loading...</span>\
+                                </div>\
+                              </div>');
+  }
   
   performAjaxRequest(route, "GET", "json", "", onDataFetchSuccess, onDataFetchFailure, onDataFetchCompletion);
 }
@@ -146,12 +156,15 @@ function fetchData(field, value){
 function onDataFetchSuccess(response, status){
 
   // saving the received data in a local javascript array
+
   localItems = response;
 
   displayData(response, status);
 
   // removing possible spinners from the interface
   $(".spinner-border").parent().remove();
+
+  $(".modal.show").modal("hide");
 }
 
 function onDataFetchFailure(response, status, error){
