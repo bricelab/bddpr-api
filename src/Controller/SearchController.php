@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/api/search", name="search", methods="GET")
+     * @Route("/api/search", name="api_search_action", methods="GET", options={"expose"=true})
      */
     public function index(Request $request, FugitifRepository $repository) : Response
     {

@@ -75,6 +75,18 @@
     "doctrine/reflection": {
         "version": "v1.1.0"
     },
+    "friendsofsymfony/jsrouting-bundle": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.3",
+            "ref": "a9f2e49180f75cdc71ae279a929c4b2e0638de84"
+        },
+        "files": [
+            "config/routes/fos_js_routing.yaml"
+        ]
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -170,6 +182,9 @@
         "files": [
             "public/.htaccess"
         ]
+    },
+    "symfony/asset": {
+        "version": "v4.4.5"
     },
     "symfony/cache": {
         "version": "v4.4.2"
@@ -344,19 +359,70 @@
     "symfony/stopwatch": {
         "version": "v4.4.2"
     },
+    "symfony/translation-contracts": {
+        "version": "v2.0.1"
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.4.5"
+    },
+    "symfony/twig-bundle": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "15a41bbd66a1323d09824a189b485c126bbefa51"
+        },
+        "files": [
+            "config/packages/test/twig.yaml",
+            "config/packages/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
+    "symfony/twig-pack": {
+        "version": "v1.0.0"
+    },
     "symfony/var-dumper": {
         "version": "v4.4.2"
     },
     "symfony/var-exporter": {
         "version": "v4.4.2"
     },
+    "symfony/webpack-encore-bundle": {
+        "version": "1.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.6",
+            "ref": "69e1d805ad95964088bd510c05995e87dc391564"
+        },
+        "files": [
+            "assets/css/app.css",
+            "assets/js/app.js",
+            "config/packages/assets.yaml",
+            "config/packages/prod/webpack_encore.yaml",
+            "config/packages/test/webpack_encore.yaml",
+            "config/packages/webpack_encore.yaml",
+            "package.json",
+            "webpack.config.js"
+        ]
+    },
     "symfony/yaml": {
         "version": "v4.4.2"
+    },
+    "twig/extra-bundle": {
+        "version": "v3.0.3"
+    },
+    "twig/twig": {
+        "version": "v3.0.3"
     },
     "webimpress/safe-writer": {
         "version": "2.0.0"
     },
     "webmozart/assert": {
         "version": "1.6.0"
+    },
+    "willdurand/jsonp-callback-validator": {
+        "version": "v1.1.0"
     }
 }

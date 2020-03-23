@@ -14,8 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Fugitif
 {
-    use TimestampTrait;
-    use UserActionsTrait;
+    use TimestampTrait, UserActionsTrait;
     
     /**
      * @var integer ID de l'entité
@@ -158,14 +157,6 @@ class Fugitif
     /**
      * @var string
      * 
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("search:read")
-     */
-    private $numeroPieceID;
-
-    /**
-     * @var string
-     * 
      * @ORM\Column(type="string", length=255, nullable=true, name="numero_telephone")
      * @Groups("search:read")
      */
@@ -195,11 +186,22 @@ class Fugitif
      */
     private $listeNationalites;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $langues;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PieceIdentification", mappedBy="fugitif")
+     */
+    private $pieceIdentification;
+
     public function __construct()
     {
         $this->listeNationalites = new ArrayCollection();
         $this->fugNationalites = new ArrayCollection();
         $this->mandats = new ArrayCollection();
+        $this->pieceIdentification = new ArrayCollection();
     }
 
     /**
@@ -533,26 +535,6 @@ class Fugitif
     /**
      * @return string|null
      */
-    public function getNumeroPieceID(): ?string
-    {
-        return $this->numeroPieceID;
-    }
-
-    /**
-     * @param string|null $numeroPieceID
-     * 
-     * @return self
-     */
-    public function setNumeroPieceID(?string $numeroPieceID): self
-    {
-        $this->numeroPieceID = $numeroPieceID;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getNumeroTelephone(): ?string
     {
         return $this->numeroTelephone;
@@ -666,6 +648,49 @@ class Fugitif
             // set the owning side to null (unless already changed)
             if ($listeNationalite->getFugitif() === $this) {
                 $listeNationalite->setFugitif(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLangues(): ?string
+    {
+        return $this->langues;
+    }
+
+    public function setLangues(?string $langues): self
+    {
+        $this->langues = $langues;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PieceIdentification[]
+     */
+    public function getPieceIdentification(): Collection
+    {
+        return $this->pieceIdentification;
+    }
+
+    public function addPieceIdentification(PieceIdentification $pieceIdentification): self
+    {
+        if (!$this->pieceIdentification->contains($pieceIdentification)) {
+            $this->pieceIdentification[] = $pieceIdentification;
+            $pieceIdentification->setFugitif($this);
+        }
+
+        return $this;
+    }
+
+    public function removePieceIdentification(PieceIdentification $pieceIdentification): self
+    {
+        if ($this->pieceIdentification->contains($pieceIdentification)) {
+            $this->pieceIdentification->removeElement($pieceIdentification);
+            // set the owning side to null (unless already changed)
+            if ($pieceIdentification->getFugitif() === $this) {
+                $pieceIdentification->setFugitif(null);
             }
         }
 

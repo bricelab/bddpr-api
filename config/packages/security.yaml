@@ -18,21 +18,43 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            
         # main:
         #     anonymous: lazy
 
-        user_registration:
-            pattern: ^/api/register
-            anonymous: true
+        # user_registration:
+        #     pattern: ^/api/register
+        #     anonymous: true
 
-        api:
-            pattern: ^/api
-            stateless: true
-            anonymous: false
-            provider: app_user_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+        # api:
+        #     pattern: ^/api/
+        #     stateless: true
+        #     anonymous: false
+        #     provider: app_user_provider
+        #     guard:
+        #         authenticators:
+        #             - lexik_jwt_authentication.jwt_token_authenticator        
+
+        backend:
+            pattern:        ^/backend
+            security:       true 
+            anonymous:      false
+            provider:       app_user_provider   
+            http_basic:     ~
+            form_login: 
+                login_path: app_login
+                check_path: app_login_check
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path:       app_logout
+                target:     /app_login
+            remember_me:
+                secret:     '%env(APP_SECRET)%'
+                # lifetime:  604800
+                # path:      /
+            # guard:
+            #     authenticators:
+            #         - App\Security\LoginFormAuthenticator
 
         main:
             stateless: true
@@ -46,7 +68,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             guard:
                 authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+                    - lexik_jwt_authentication.jwt_token_authenticator    
 
 
             # activate different ways to authenticate

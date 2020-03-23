@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AppController!{% endblock %}
+
+{% block container %}
+
+    <div class = "col-6 offset-3 mt-5">
+        <h4 class = "w-100">
+            Liste des personnes recherchées
+            <div class="dropdown float-right">
+                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Actions
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a id = "dropdown-item-add" class="dropdown-item" href="#" data-toggle="modal" data-target="#dataModal">Ajouter</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#searchModal">Rechercher</a>
+                </div>
+            </div>
+        </h4>
+        <hr class = "mb-5"/>
+
+        <table class="table table-striped mt-5 ">
+            <thead>
+                <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénoms</th>
+                <th scope="col">Infractions</th>
+                <th scope="col">Juridictions</th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                </tr> -->
+            </tbody>
+        </table>
+        
+        
+        
+        
+        <div class = "text-center pt-5">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    {# include the search modal twig component in the html page #}
+    {% include "app/modals/searchModal.html.twig" %}
+
+    {# include the outlaw's informations modal twig component in the html page #}
+    {% include "app/modals/outlawModal.html.twig" %}
+
+    <div id="snackbar"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type = "module" src = "{{ asset('resources/js/app.js') }}"></script>
+    {# <script type="application/javascript" src = "./resources/js/data.js"></script>
+    <script type="application/javascript" src = "./resources/js/search.js"></script> #}
+{% endblock %}
+
