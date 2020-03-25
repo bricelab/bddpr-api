@@ -212,7 +212,7 @@ p.description{
 .footer{
 	padding: 20px;
 	background-color: #383838;
-	position: absolute;
+	/* position: absolute; */
 	bottom: 0;
 	width: 100%;
 }

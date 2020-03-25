@@ -30,23 +30,48 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                </tr> -->
+                {% for mandat in mandats %}
+                    <tr data-id = "{{mandat.id}}">
+                        <th scope="row">{{mandat.fugitif.nom}}</th>
+                        <td>{{mandat.fugitif.prenoms}}</td>
+                        <td>{{mandat.infractions}}</td>
+                        <td>{{mandat.juridictions}}</td>
+                        <td>
+                            <img class = "delete_menu_action" style = "cursor: pointer;" src = "{{asset('build/images/delete_icon.png')}}" alt = "" width = "" height = "" title = "Supprimer"/>
+                            <img class = "edit_menu_action" style = "cursor: pointer;" src = "{{asset('build/images/edit_icon.png')}}" alt = "" width = "" height = "" title = "Modifier" data-toggle="modal" data-target="#dataModal"/>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
         
         
+        <div class "text-center">
+            <nav class = "" aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                    {% for i in range(1, pages) %}
+                        <li class="page-item"><a class="page-link" href="{{path('app_backend', {"requested_page": i})}}">{{i}}</a></li>
+                    {% endfor %}
+                    
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
         
-        
-        <div class = "text-center pt-5">
+        {# <div class = "text-center pt-5">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
+        </div> #}
 
     </div>
 
@@ -67,7 +92,5 @@
 {% block javascripts %}
     {{parent()}}
     <script type = "module" src = "{{ asset('resources/js/app.js') }}"></script>
-    {# <script type="application/javascript" src = "./resources/js/data.js"></script>
-    <script type="application/javascript" src = "./resources/js/search.js"></script> #}
 {% endblock %}
 

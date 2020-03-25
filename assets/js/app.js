@@ -23,7 +23,7 @@ Routing.setRoutingData(routes);
 
 var localItems = [];
 
-fetchData("", "");
+// fetchData("", "");
 
 export function performAjaxRequest(route, type, dataType, data, onRequestSuccess, onRequestFailure, onRequestCompletion){
 

@@ -47,4 +47,19 @@ class MandatRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return integer Return the count of all mandat objects
+     */
+    public function getAllMandatsCount()
+    {
+        return $this->_em->createQueryBuilder()
+                            ->select('count(m)')
+                            ->from($this->_entityName, 'm')
+                            ->getQuery()
+                            ->getSingleScalarResult()
+                            ;
+
+    }
+    
 }
