@@ -21,6 +21,7 @@ class NationaliteFugitif
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $id;
 
@@ -28,6 +29,7 @@ class NationaliteFugitif
      * @ORM\ManyToOne(targetEntity="App\Entity\Nationalite", inversedBy="natFugitifs", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $nationalite;
 

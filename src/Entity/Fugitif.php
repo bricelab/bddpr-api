@@ -23,6 +23,7 @@ class Fugitif
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $id;
 
@@ -31,6 +32,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $nom;
 
@@ -39,6 +41,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $prenoms;
 
@@ -47,6 +50,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $nomMarital;
 
@@ -55,6 +59,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $alias;
 
@@ -63,6 +68,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $surnom;
 
@@ -71,6 +77,7 @@ class Fugitif
      * 
      * @ORM\Column(type="date", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $dateNaissance;
 
@@ -79,6 +86,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $lieuNaissance;
 
@@ -87,6 +95,7 @@ class Fugitif
      * 
      * @ORM\Column(type="text", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $adresse;
 
@@ -95,6 +104,7 @@ class Fugitif
      * 
      * @ORM\Column(type="float", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $taille;
 
@@ -103,6 +113,7 @@ class Fugitif
      * 
      * @ORM\Column(type="float", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $poids;
 
@@ -111,6 +122,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $couleurYeux;
 
@@ -119,6 +131,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $couleurPeau;
 
@@ -127,6 +140,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $couleurCheveux;
 
@@ -135,6 +149,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $photoName;
 
@@ -143,6 +158,7 @@ class Fugitif
      * 
      * @ORM\Column(type="integer", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $photoSize;
 
@@ -151,6 +167,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $sexe;
 
@@ -159,6 +176,7 @@ class Fugitif
      * 
      * @ORM\Column(type="string", length=255, nullable=true, name="numero_telephone")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $numeroTelephone;
 
@@ -167,6 +185,7 @@ class Fugitif
      * 
      * @ORM\Column(type="text", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $observations;
 
@@ -183,16 +202,21 @@ class Fugitif
      * 
      * @ORM\OneToMany(targetEntity="App\Entity\NationaliteFugitif", mappedBy="fugitif", orphanRemoval=true, cascade={"persist"})
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $listeNationalites;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("infos_mandat")
+     * @Groups("search:read")
      */
     private $langues;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PieceIdentification", mappedBy="fugitif")
+     * @Groups("infos_mandat")
+     * @Groups("search:read")
      */
     private $pieceIdentification;
 

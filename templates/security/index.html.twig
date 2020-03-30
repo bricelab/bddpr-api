@@ -7,35 +7,48 @@
 
 {% block container %}
 
-	<form method="post" class = "col-3 mx-auto mt-5" action = "{{ path('app_login_check') }}">
-		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-		{% endif %}
+	{# <div class = "row"> #}
+		<div class = "card bg-white col-4 mx-auto my-5 p-3">
+			<form method="post" class = "" action = "{{ path('app_login_check') }}">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
 
-		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-		<label for="inputEmail" class="sr-only">Email</label>
-		<input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-		<label for="inputPassword" class="sr-only">Password</label>
-		<input type="password" name="_password" id="inputPassword" class="form-control mt-3" placeholder="Password" required>
+				<h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
 
-		<input type="hidden" name="_csrf_token"
-			value="{{ csrf_token('authenticate') }}"
-		>
+				<div class="form-group">
+					<label for="exampleInputEmail1">Adresse email</label>
+					{# <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"> #}
+					<input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" placeholder="" required autofocus>
+					{# <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> #}
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Mot de passe</label>
+					{# <input type="password" class="form-control" id="exampleInputPassword1"> #}
+					<input type="password" name="_password" id="inputPassword" class="form-control" placeholder="" required>
+				</div>
 
-		{#
-			Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-			See https://symfony.com/doc/current/security/remember_me.html
+				<input type="hidden" name="_csrf_token"
+					value="{{ csrf_token('authenticate') }}"
+				>
 
-			<div class="checkbox mb-3">
-				<label>
-					<input type="checkbox" name="_remember_me"> Remember me
-				</label>
-			</div>
-		#}
+				{#
+					Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+					See https://symfony.com/doc/current/security/remember_me.html
 
-		<button class="btn btn-lg btn-primary mt-3" type="submit">
-			Sign in
-		</button>
-	</form>
+					<div class="checkbox mb-3">
+						<label>
+							<input type="checkbox" name="_remember_me"> Remember me
+						</label>
+					</div>
+				#}
+
+				<button class="btn btn-lg btn-primary mt-3" type="submit">
+					Se connecter
+				</button>
+
+			</form>
+		</div>
+	{# </div> #}
 
 {% endblock %}

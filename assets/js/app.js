@@ -23,7 +23,7 @@ Routing.setRoutingData(routes);
 
 var localItems = [];
 
-// fetchData("", "");
+fetchData("", "");
 
 export function performAjaxRequest(route, type, dataType, data, onRequestSuccess, onRequestFailure, onRequestCompletion){
 
@@ -48,7 +48,7 @@ export function performAjaxRequest(route, type, dataType, data, onRequestSuccess
 
 export function fetchData(field, value){
 
-    var route = Routing.generate('api_search_action', { "field": field, "value": value }); // site_url+"/api/search?field="+field+"&q="+value;
+    var route = Routing.generate('app_mandats_fetch_action', { "page": 1 }); // site_url+"/api/search?field="+field+"&q="+value;
   
     $("table tbody").empty();
     
@@ -67,7 +67,7 @@ function onDataFetchSuccess(response, status){
 
   // saving the received data in a local javascript array
 
-  localItems = response;
+  localItems = response.mandats;
 
   displayData(response, status);
 
@@ -86,25 +86,37 @@ function onDataFetchCompletion(response, status){
 }
 
 function displayData(data, status){
-    // console.log(data, status);
+    console.log(data);
 
-    data.forEach(element => {
+    data.mandats.forEach(element => {
 
-        element.mandats.forEach(mandat =>{
-            if (mandat.archived == false){
-                $("table tbody").append('<tr data-id = "'+mandat.id+'">\
-                    <th scope="row">'+element.nom+'</th>\
-                    <td>'+element.prenoms+'</td>\
-                    <td>'+mandat.infractions+'</td>\
-                    <td>'+mandat.juridictions+'</td>\
-                    <td>\
-                        <img class = "delete_menu_action" style = "cursor: pointer;" src = "'+delete_icon+'" alt = "" width = "" height = "" title = "Supprimer"/>\
-                        <img class = "edit_menu_action" style = "cursor: pointer;" src = "'+edit_icon+'" alt = "" width = "" height = "" title = "Modifier" data-toggle="modal" data-target="#dataModal"/>\
-                    </td>\
-                </tr>');
-            }
-        });
+        if (element.archived == false){
+            $("table tbody").append('<tr data-id = "'+element.id+'">\
+                <th scope="row">'+element.fugitif.nom+'</th>\
+                <td>'+element.fugitif.prenoms+'</td>\
+                <td>'+element.infractions+'</td>\
+                <td>'+element.juridictions+'</td>\
+                <td>\
+                    <img class = "delete_menu_action" style = "cursor: pointer;" src = "'+delete_icon+'" alt = "" width = "" height = "" title = "Supprimer"/>\
+                    <img class = "edit_menu_action" style = "cursor: pointer;" src = "'+edit_icon+'" alt = "" width = "" height = "" title = "Modifier" data-toggle="modal" data-target="#dataModal"/>\
+                </td>\
+            </tr>');
+        }
+
     });
+
+    for (let i = 1; i < data.pages; i++) {
+        // const element = array[i];
+        $("ul.pagination li:last").before('<li class="page-item"><a class="page-link" href="{{path(\'app_backend\', {"page": '+i+'})}}">'+i+'</a></li>');
+        if (i == 3){
+            $("ul.pagination li:last").before('<li class="page-item"><a class="page-link read-only">...</a></li>');
+            break;
+        }
+    }
+
+    $("ul.pagination li:last").before('<li class="page-item"><a class="page-link" href="{{path(\'app_backend\', {"page": '+(data.pages-1)+'})}}">'+(data.pages-1)+'</a></li>');
+
+    $(".spinner-border").parent().remove();
 }
 
 
@@ -131,37 +143,36 @@ function fillModalFormFields(object){
     // fill the form's fields
     console.log(object);
 
-    $("input[name='nom']").val(object.nom);
-    $("input[name='prenoms']").val(object.prenoms);
-    $("input[name='nommarital']").val(object.prenoms);
-    $("input[name='adresse']").val(object.adresse);
-    $("input[name='alias']").val(object.alias);
-    $("input[name='surnom']").val(object.surnom);
-    $("input[name='lieunaissance']").val(object.lieuNaissance);
-    $("input[name='datenaissance']").val(object.dateNaissance);
-    $("input[name='taille']").val(object.taille);
-    $("input[name='poids']").val(object.poids);
-    $("input[name='prénoms']").val(object.prenoms);
-    $("input[name='numerotelephone']").val(object.numeroTelephone);
-    $("textarea[name='observations']").val(object.observations);
-    $("input[name='numeropieceid']").val(object.numeroPieceId);
-    $("input[name='infractions']").val(object.mandats.mandat.infractions);
-    $("input[name='chambres']").val(object.mandats.mandat.chambres);
-    $("input[name='juridictions']").val(object.mandats.mandat.juridictions);
-    $("input[name='reference']").val(object.mandats.mandat.reference);
+    $("input[name='nom']").val(object.fugitif.nom);
+    $("input[name='prenoms']").val(object.fugitif.prenoms);
+    $("input[name='nommarital']").val(object.fugitif.prenoms);
+    $("input[name='adresse']").val(object.fugitif.adresse);
+    $("input[name='alias']").val(object.fugitif.alias);
+    $("input[name='surnom']").val(object.fugitif.surnom);
+    $("input[name='lieunaissance']").val(object.fugitif.lieuNaissance);
+    $("input[name='datenaissance']").val(object.fugitif.dateNaissance);
+    $("input[name='taille']").val(object.fugitif.taille);
+    $("input[name='poids']").val(object.fugitif.poids);
+    $("input[name='numerotelephone']").val(object.fugitif.numeroTelephone);
+    $("textarea[name='observations']").val(object.fugitif.observations);
+    // $("input[name='numeropieceid']").val(object.numeroPieceId);
+    $("input[name='infractions']").val(object.infractions);
+    $("input[name='chambres']").val(object.chambres);
+    $("input[name='juridictions']").val(object.juridictions);
+    $("input[name='reference']").val(object.reference);
 
     $("[name='typemandat'] option").attr("selected", false);
-    $("[name='typemandat']").find("option[value='"+object.mandats.mandat.typeMandat.libelle+"']").attr("selected", true);
+    $("[name='typemandat']").find("option[value='"+object.typeMandat.libelle+"']").attr("selected", true);
 
     $("[name='execute'] option").attr("selected", false);
-    $("[name='execute']").find("option[value='"+object.mandats.mandat.execute+"']").attr("selected", true);
+    $("[name='execute']").find("option[value='"+object.execute+"']").attr("selected", true);
 
     $("[name='sexe'] option").attr("selected", false);
-    $("[name='sexe']").find("option[value='"+object.sexe+"']").attr("selected", true);
+    $("[name='sexe']").find("option[value='"+object.fugitif.sexe+"']").attr("selected", true);
 
-    if (object.listeNationalites.length){
+    if (object.fugitif.listeNationalites.length){
         $("[name='nationalite'] option").attr("selected", false);
-        $("[name='nationalite']").find("option[value='"+(object.listeNationalites[0]).nationalite.libelle+"']").attr("selected", true);
+        $("[name='nationalite']").find("option[value='"+(object.fugitif.listeNationalites[0]).nationalite.libelle+"']").attr("selected", true);
     }   
 }
 
@@ -349,21 +360,13 @@ $("#dropdown-item-add").click(function(){
 function getCurrentObject(){
 
   var object = null;
-  console.log("before : ", currentItemId);
+  console.log("before : ", currentItemId, localItems);
     for (let i = 0; i < localItems.length; i++) {
-        const element = localItems[i];
-        var found = false;
-        for (let j = 0; j < element.mandats.length; j++) {
-            const mandat = element.mandats[j];
-            if (mandat.id == currentItemId){
-                element.mandats.mandat = mandat;
-                object = element;
-                found = true;
-                break;
-           }
-        }
-        if (found)
+        var mandat = (localItems[i]);
+        if (mandat.id == currentItemId){
+            object = mandat;
             break;
+       }
     }
   return object;
 }

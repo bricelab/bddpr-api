@@ -21,36 +21,42 @@ class Mandat
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $reference;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $execute;
 
     /**
      * @ORM\Column(type="text")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $infractions;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $chambres;
 
     /**
      * @ORM\Column(type="text")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $juridictions;
 
@@ -58,24 +64,28 @@ class Mandat
      * @ORM\ManyToOne(targetEntity="App\Entity\TypeMandat", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $typeMandat;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Fugitif", inversedBy="mandats", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("infos_mandat")
      */
     private $fugitif;
     
     /**
      * @ORM\Column(type="date", name="date_emission", nullable=true)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $dateEmission;
 
     /**
      * @ORM\Column(type="boolean", options={"default": 0})
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $archived;
 

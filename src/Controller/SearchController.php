@@ -16,6 +16,7 @@ class SearchController extends AbstractController
     /**
      * @Route("/api/search", name="api_search_action", methods="GET", options={"expose"=true})
      */
+
     public function index(Request $request, FugitifRepository $repository) : Response
     {
         $search = new Search();
@@ -29,8 +30,7 @@ class SearchController extends AbstractController
         if($data === null){
             $message = "Erreur : Le champ {$search->field} n'existe pas !";
             return $this->json($message, Response::HTTP_BAD_REQUEST);
-        }
-            
+        }   
         return $this->json($data, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
     }
 
@@ -55,4 +55,5 @@ class SearchController extends AbstractController
                             
         return $this->json($data, Response::HTTP_OK, [], [ "groups" => "search:read" ]);
     }
+
 }

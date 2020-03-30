@@ -69,7 +69,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/backend/login_check", name="app_login_check")
+     * @Route("/admin/login_check", name="app_login_check")
      */
 
     public function checkLogin()

@@ -20,12 +20,14 @@ class TypeMandat
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups("search:read")
+     * @Groups("infos_mandat")
      */
     private $libelle;
 
